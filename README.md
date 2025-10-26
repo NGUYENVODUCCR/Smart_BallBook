@@ -2,10 +2,10 @@
 
 ## Cấu trúc dự án
 Smart_Ballbook/
-├── backend/        # API Node.js
-├── frontend-web/   # Web app ReactJS
-├── frontend-app/   # Mobile app React Native
-└── notes/          # Tài liệu, hướng dẫn, API
+- backend/        # API Node.js
+- frontend-web/   # Web app ReactJS
+- frontend-app/   # Mobile app React Native
+- notes/          # Tài liệu, hướng dẫn, API
 
 -------------------------------------------------------------
 
@@ -18,20 +18,18 @@ Smart_Ballbook/
 -------------------------------------------------------------
 
 ## Cách chạy nhanh
-### Backend
 ```bash
+### Backend
 cd backend
 npm install
 npm start
 
 ### Frontend Web
-```bash
 cd frontend-web
 npm install
 npm start
 
 ### Frontend App
-```bash
 cd frontend-app
 npm install
 npm start
@@ -39,9 +37,9 @@ npm start
 
 
 -------------------------------------------------------------
-
+```
 ## TÀI LIỆU GITHUB: Cách push code đúng chuẩn
-
+```bash
 # Thiết lập
 git init
 
@@ -51,7 +49,10 @@ git clone https://github.com/NGUYENVODUCCR/Smart_BallBook.git # Nếu chưa có 
 git remote add origin https://github.com/NGUYENVODUCCR/Smart_BallBook.git # Nếu có rồi nhưng cần bổ sung thêm (chỉ kết nối repo)
 
 # → Sau đó làm việc trong đúng thư mục - nhánh của mình, ví dụ:
+
+```
 ### BACKEND
+```bash
 cd Smart_Ballbook/backend (1)
 
 # Tạo branch riêng:
@@ -83,8 +84,9 @@ git push origin add-more-ha (4 hà)
 
 
 -------------------------------------------------------------
+```    
 ### Nếu tương tác với project Smart-BallBook chính
-
+```bash
 # Nếu chỉ commit file tùy chọn 
 git reset
 git add README.md
@@ -101,7 +103,9 @@ git push -u origin main
 
 
 ------------------------------------------------------------
-
+```
 # FRONTEND
+```bash
 cd Smart_Ballbook/frontend-web (Hiếu)
 cd Smart_Ballbook/frontend-app (Hà) ....
+```
