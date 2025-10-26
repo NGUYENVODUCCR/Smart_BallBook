@@ -140,3 +140,15 @@ export async function googleSignIn(req, res) {
     return res.status(500).json({ msg: "Google sign-in failed" });
   }
 }
+
+export async function profile(req, res) {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: ["id", "name", "email", "role", "is_verified"],
+    });
+    return res.json({ user });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: "Server error" });
+  }
+}
