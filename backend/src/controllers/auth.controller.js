@@ -59,3 +59,84 @@ export async function register(req, res) {
   }
 }
 
+export async function login(req, res) {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json({ msg: "Email and password required" });
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(400).json({ msg: "Invalid credentials" });
+
+    if (!user.password)
+      return res
+        .status(400)
+        .json({ msg: "User registered via Google. Use Google Sign-in" });
+
+    const matched = bcrypt.compareSync(password, user.password);
+    if (!matched) return res.status(400).json({ msg: "Invalid credentials" });
+
+    const token = createToken(user);
+    return res.json({
+      msg: "Login success",
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: "Server error" });
+  }
+}
+
+export async function googleSignIn(req, res) {
+  try {
+    const { idToken } = req.body;
+    if (!idToken) return res.status(400).json({ msg: "idToken required" });
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+
+    const email = payload.email;
+    const name = payload.name;
+    const googleId = payload.sub;
+
+    let user = await User.findOne({ where: { email } });
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        google_id: googleId,
+        is_verified: true,
+      });
+    } else {
+      if (!user.google_id) {
+        user.google_id = googleId;
+        user.is_verified = true;
+        await user.save();
+      }
+    }
+
+    const token = createToken(user);
+    return res.json({
+      msg: "Google sign-in success",
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error("Google sign error:", err);
+    return res.status(500).json({ msg: "Google sign-in failed" });
+  }
+}
