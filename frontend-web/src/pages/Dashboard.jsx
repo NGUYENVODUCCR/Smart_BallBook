@@ -4,7 +4,7 @@ import { getAllFields, searchFieldByAI } from "../api/FieldService";
 import axios from "axios";
 import { Menu, MapPin, Mic } from "lucide-react";
 import { QRCodeCanvas } from "qrcode.react";
-//
+
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [fields, setFields] = useState([]);
