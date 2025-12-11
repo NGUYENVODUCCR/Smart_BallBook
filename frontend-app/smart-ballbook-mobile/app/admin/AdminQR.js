@@ -1,4 +1,3 @@
-// app/admin/AdminQR.js
 import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
