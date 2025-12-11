@@ -60,7 +60,6 @@ export default function AdminProfile() {
     router.replace("/login");
   };
 
-  // ================= PICK + UPLOAD AVATAR =================
   const pickImage = async () => {
     const res = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
