@@ -45,6 +45,7 @@ QRCheckin.init(
   }
 );
 
+// Quan hệ
 QRCheckin.belongsTo(Booking, { foreignKey: "booking_id", as: "booking" });
 Booking.hasOne(QRCheckin, { foreignKey: "booking_id", as: "qr" });
 

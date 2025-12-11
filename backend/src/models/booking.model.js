@@ -28,7 +28,7 @@ Booking.init({
     allowNull: false,
   },
   status: {
-    type: DataTypes.ENUM("pending", "confirmed", "cancelled"),
+    type: DataTypes.ENUM("pending", "paid", "cancelled", "expired"),
     defaultValue: "pending",
   },
 }, {
