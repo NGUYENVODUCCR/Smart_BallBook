@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login, googleSignIn } from "../api/auth";
 import { GoogleLogin } from "@react-oauth/google";
-//
+
 export default function Login() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");

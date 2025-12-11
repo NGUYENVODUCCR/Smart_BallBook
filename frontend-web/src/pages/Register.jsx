@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { register, googleSignIn } from "../api/auth";
 import { GoogleLogin } from "@react-oauth/google";
-//
+
 export default function Register() {
   const [form, setForm] = useState({
     name: "",

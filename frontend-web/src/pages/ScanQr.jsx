@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import axios from "axios";
-//
+
 export default function ScanQr() {
   const [scanResult, setScanResult] = useState("");
   const [checkField, setCheckField] = useState(null);

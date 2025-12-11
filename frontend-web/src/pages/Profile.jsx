@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProfile } from "../api/auth";
 import { ArrowLeft } from "lucide-react";
-//
+
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
