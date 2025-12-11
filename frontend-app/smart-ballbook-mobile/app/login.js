@@ -42,11 +42,11 @@ const redirectByRole = (user) => {
   const role = user?.role?.toLowerCase();
 
   if (role === "admin") {
-    router.replace("/admin"); // admin dashboard
+    router.replace("/admin"); 
   } else if (role === "manager" || role === "user") {
-    router.replace("/user"); // user dashboard
+    router.replace("/user"); 
   } else {
-    router.replace("/login"); // fallback
+    router.replace("/login"); 
   }
 };
 
