@@ -7,7 +7,7 @@ import {
   resetField,
 } from "../api/FieldService";
 import axios from "axios";
-//
+
 export default function FieldManager({ userToken }) {
   const [fields, setFields] = useState([]);
   const [editingField, setEditingField] = useState(null);
