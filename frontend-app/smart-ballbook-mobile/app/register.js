@@ -38,7 +38,6 @@ export default function RegisterScreen() {
     }));
   };
 
-  // ===== Google Sign In Setup =====
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId:
       "596176186305-u8olpm6bn0mpek5cfv106lf4irpm2t6n.apps.googleusercontent.com",
@@ -79,7 +78,6 @@ export default function RegisterScreen() {
     }
   };
 
-  // ===== Đăng ký thường =====
   const handleRegister = async () => {
     const name = safeTrim(form.name);
     const email = safeTrim(form.email);
