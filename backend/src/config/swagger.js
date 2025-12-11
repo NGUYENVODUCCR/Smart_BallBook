@@ -1,4 +1,3 @@
-// config/swagger.js
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import path from "path";
@@ -31,11 +30,9 @@ const options = {
       },
     },
 
-    // 🔥 Cho phép apply token lên toàn bộ API mặc định
     security: [{ bearerAuth: [] }],
   },
 
-  // 👉 Quan trọng nhất: fix đường dẫn để Swagger thấy các file router
   apis: [path.join(__dirname, "../routes/*.js")],
 };
 

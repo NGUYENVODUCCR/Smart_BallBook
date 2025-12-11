@@ -55,7 +55,6 @@ export async function createBooking(req, res) {
     if (!field) return res.status(404).json({ msg: "Field not found" });
     if (field.status === "bảo trì") return res.status(400).json({ msg: "Field under maintenance" });
 
-    // Kiểm tra trùng giờ
     const overlap = await Booking.findOne({
       where: {
         field_id,
@@ -72,13 +71,11 @@ export async function createBooking(req, res) {
 
     if (overlap) return res.status(400).json({ msg: "Time slot already booked" });
 
-    // Tính tổng tiền
     const start = new Date(`1970-01-01T${start_time}:00`);
     const end = new Date(`1970-01-01T${end_time}:00`);
     const hours = (end - start) / (1000 * 60 * 60);
     const total_price = field.price_per_hour * hours;
 
-    // Tạo booking với status mặc định "pending" hoặc "paid"
     const booking = await Booking.create({
       user_id: userId,
       field_id,
@@ -86,10 +83,9 @@ export async function createBooking(req, res) {
       start_time,
       end_time,
       total_price,
-      status: "paid", // nếu muốn tạo pending trước, đổi thành "pending"
+      status: "paid", 
     });
 
-    // Cập nhật trạng thái sân
     field.status = "đã thuê";
     await field.save();
 
@@ -114,11 +110,9 @@ export async function payBooking(req, res) {
     const field = await Field.findByPk(booking.field_id);
     if (!field) return res.status(404).json({ msg: "Field not found" });
 
-    // Cập nhật trạng thái booking
     booking.status = "paid";
     await booking.save();
 
-    // Cập nhật trạng thái sân
     field.status = "đã thuê";
     await field.save();
 
@@ -129,9 +123,6 @@ export async function payBooking(req, res) {
   }
 }
 
-/**
- * Cập nhật trạng thái booking (Admin/Manager)
- */
 export async function updateBookingStatus(req, res) {
   try {
     const { id } = req.params;
@@ -160,9 +151,6 @@ export async function updateBookingStatus(req, res) {
   }
 }
 
-/**
- * Hủy booking
- */
 export async function cancelBooking(req, res) {
   try {
     const { id } = req.params;
@@ -188,9 +176,6 @@ export async function cancelBooking(req, res) {
   }
 }
 
-/**
- * Lấy booking theo field
- */
 export async function getBookingByField(req, res) {
   const { fieldId } = req.params;
   try {
@@ -217,10 +202,8 @@ export async function deleteBookingsOfField(req, res) {
       where: { field_id: fieldId }
     });
 
-    // Xóa tất cả booking
     const deletedCount = await Booking.destroy({ where: { field_id: fieldId } });
 
-    // Cập nhật trạng thái sân về trống
     const field = await Field.findByPk(fieldId);
     if (field) {
       field.status = "trống";
@@ -238,21 +221,15 @@ export async function deleteBookingsOfField(req, res) {
   }
 }
 
-/**
- * Xóa hoàn toàn tất cả booking của 1 user
- */
 export async function deleteBookingsOfUser(req, res) {
   const { userId } = req.params;
   try {
     const bookings = await Booking.findAll({ where: { user_id: userId } });
 
-    // Lưu danh sách field liên quan để trả trạng thái trống
     const fieldIds = bookings.map(b => b.field_id).filter(Boolean);
 
-    // Xóa booking
     const deletedCount = await Booking.destroy({ where: { user_id: userId } });
 
-    // Cập nhật trạng thái sân về trống
     await Field.update(
       { status: "trống" },
       { where: { id: fieldIds } }
