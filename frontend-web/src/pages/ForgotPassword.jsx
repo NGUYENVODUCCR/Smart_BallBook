@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { forgotPassword } from "../api/auth";
 import { useNavigate } from "react-router-dom";
-//
+
 export default function ForgotPassword() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const navigate = useNavigate();
