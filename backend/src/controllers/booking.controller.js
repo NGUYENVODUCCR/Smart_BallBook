@@ -3,9 +3,6 @@ import Field from "../models/field.model.js";
 import User from "../models/user.model.js";
 import { Op } from "sequelize";
 
-/**
- * Lấy tất cả booking (Admin/Manager)
- */
 export async function getAllBookings(req, res) {
   try {
     const bookings = await Booking.findAll({
@@ -22,9 +19,6 @@ export async function getAllBookings(req, res) {
   }
 }
 
-/**
- * Lấy booking của user
- */
 export async function getMyBookings(req, res) {
   try {
     const userId = req.user.id;
@@ -40,9 +34,6 @@ export async function getMyBookings(req, res) {
   }
 }
 
-/**
- * Tạo booking mới
- */
 export async function createBooking(req, res) {
   try {
     const userId = req.user.id;
@@ -96,9 +87,7 @@ export async function createBooking(req, res) {
   }
 }
 
-/**
- * Thanh toán booking (Admin/FE confirm)
- */
+
 export async function payBooking(req, res) {
   try {
     const { id } = req.params;

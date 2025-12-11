@@ -4,9 +4,6 @@ import Field from "../models/field.model.js";
 import QRCheckin from "../models/qrcheckin.model.js";
 import { generateQRCode } from "../services/qr.service.js";
 
-/**
- * Tạo link thanh toán VNPay
- */
 export const createPayment = async (req, res) => {
   try {
     const { bookingId } = req.body;
@@ -34,9 +31,6 @@ export const createPayment = async (req, res) => {
   }
 };
 
-/**
- * VNPay redirect về sau thanh toán
- */
 export const vnpayReturn = async (req, res) => {
   try {
     const vnp_Params = req.query;

@@ -57,9 +57,6 @@ export async function searchFieldByAI(req, res) {
   }
 }
 
-/**
- * Lấy tất cả sân
- */
 export async function getAllFields(req, res) {
   try {
     const fields = await Field.findAll({
@@ -72,9 +69,6 @@ export async function getAllFields(req, res) {
   }
 }
 
-/**
- * Lấy sân theo ID
- */
 export async function getFieldById(req, res) {
   try {
     const { id } = req.params;
@@ -89,9 +83,6 @@ export async function getFieldById(req, res) {
   }
 }
 
-/**
- * Tạo sân mới
- */
 export async function createField(req, res) {
   try {
     const {
@@ -125,9 +116,6 @@ export async function createField(req, res) {
   }
 }
 
-/**
- * Cập nhật thông tin sân
- */
 export async function updateField(req, res) {
   try {
     const { id } = req.params;
@@ -165,10 +153,6 @@ export async function updateField(req, res) {
   }
 }
 
-
-/**
- * Xóa sân
- */
 export async function deleteField(req, res) {
   try {
     const { id } = req.params;
@@ -185,9 +169,6 @@ export async function deleteField(req, res) {
   }
 }
 
-/**
- * Cập nhật trạng thái sân (chỉ "trống" / "đã thuê")
- */
 export async function updateFieldStatus(req, res) {
   try {
     const { id } = req.params;
@@ -215,9 +196,6 @@ export async function updateFieldStatus(req, res) {
   }
 }
 
-/**
- * Reset sân về "trống" + update booking thành cancelled
- */
 export async function resetFieldStatus(req, res) {
   try {
     const { id } = req.params;
