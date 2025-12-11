@@ -48,7 +48,7 @@ export default function UserHomeFields({ fields = [], setFields, onCreateBooking
 
         let url = "http://192.168.1.139:5000/api/bookings";
         if (user.role.toLowerCase() === "user") {
-          url = "http://192.168.1.139:5000/api/bookings/my"; // chỉ của user
+          url = "http://192.168.1.139:5000/api/bookings/my"; 
         }
 
         const res = await axios.get(url, {
@@ -184,7 +184,7 @@ export default function UserHomeFields({ fields = [], setFields, onCreateBooking
   useEffect(() => {
     if (result) {
       setSearchText(result);
-      searchFieldByAI(result).then(setAIResults);   // 🔥 gọi backend lấy kết quả thật
+      searchFieldByAI(result).then(setAIResults);  
     }
   }, [result]);
   
