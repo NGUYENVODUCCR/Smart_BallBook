@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-//
+
 export default function Revenue() {
   const [type, setType] = useState("day");
   const [value, setValue] = useState("");

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-//
+
 export default function Landing() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-400 flex flex-col">

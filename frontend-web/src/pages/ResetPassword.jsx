@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { resetPassword } from "../api/auth";
 import { useNavigate } from "react-router-dom";
-//
+
 export default function ResetPassword() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [otp, setOtp] = useState("");
