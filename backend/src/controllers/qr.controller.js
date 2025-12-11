@@ -2,9 +2,6 @@ import Booking from "../models/booking.model.js";
 import QRCheckin from "../models/qrcheckin.model.js";
 import { generateQRCode } from "../services/qr.service.js";
 
-/**
- * Tạo QR code cho booking đã xác nhận
- */
 export async function createQRForBooking(req, res) {
   try {
     const { bookingId } = req.params;
@@ -52,9 +49,6 @@ export async function createQRForBooking(req, res) {
   }
 }
 
-/**
- * Check-in bằng QR code
- */
 export async function scanQR(req, res) {
   try {
     const { bookingId } = req.body;
@@ -90,9 +84,6 @@ export async function scanQR(req, res) {
   }
 }
 
-/**
- * Lấy QR code theo booking
- */
 export async function getQRByBooking(req, res) {
   try {
     const { bookingId } = req.params;
