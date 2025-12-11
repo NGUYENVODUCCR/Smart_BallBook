@@ -20,7 +20,6 @@ export const createPayment = async (req, res) => {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    // Không cho thanh toán lại booking đã confirmed/cancelled
     if (booking.status !== "pending") {
       return res.status(400).json({
         message: "Booking is not eligible for payment",
@@ -60,18 +59,16 @@ export const vnpayReturn = async (req, res) => {
     }
 
     if (rspCode === "00") {
-      // ✅ Thanh toán thành công
+
       booking.status = "confirmed";
       await booking.save();
 
-      // ✅ Update trạng thái sân
       const field = await Field.findByPk(booking.field_id);
       if (field) {
         field.status = "đã thuê";
         await field.save();
       }
 
-      // ✅ Tạo QR code
       const qrData = {
         bookingId: booking.id,
         userId: booking.user_id,
@@ -90,7 +87,7 @@ export const vnpayReturn = async (req, res) => {
         `${process.env.FRONTEND_URL}/payment-success`
       );
     } else {
-      // ❌ Thanh toán thất bại
+
       return res.redirect(
         `${process.env.FRONTEND_URL}/payment-failed`
       );
