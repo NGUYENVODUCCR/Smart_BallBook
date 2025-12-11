@@ -18,7 +18,14 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://192.168.1.139",
+    "http://localhost:3000",
+    "https://smart-ballbook-wb5f.onrender.com",
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
