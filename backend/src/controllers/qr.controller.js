@@ -18,14 +18,12 @@ export async function createQRForBooking(req, res) {
       return res.status(404).json({ msg: "Booking not found" });
     }
 
-    // ✅ Chỉ tạo QR khi booking đã confirmed
     if (booking.status !== "confirmed") {
       return res.status(400).json({
         msg: "Booking must be confirmed before creating QR",
       });
     }
 
-    // Nếu QR đã tồn tại
     const existing = await QRCheckin.findOne({
       where: { booking_id: bookingId },
     });
@@ -33,7 +31,6 @@ export async function createQRForBooking(req, res) {
       return res.json({ msg: "QR already exists", qr: existing });
     }
 
-    // Tạo QR
     const qrData = {
       bookingId: booking.id,
       userId: booking.user_id,
