@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllFields } from "../api/FieldService";
 import { MapPin, DollarSign, Info, Image, ArrowLeft } from "lucide-react";
-//
+
 export default function FieldList() {
   const [fields, setFields] = useState([]);
   const [selectedField, setSelectedField] = useState(null);
