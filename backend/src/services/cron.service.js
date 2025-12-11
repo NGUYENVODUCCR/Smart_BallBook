@@ -2,7 +2,6 @@ import cron from "node-cron";
 import User from "../models/user.model.js";
 import { sendMail } from "../services/mail.service.js";
 
-// Nội dung email
 const EMAIL_SUBJECT = "⚽ Trải nghiệm thể thao tuyệt vời cùng chúng tôi!";
 const EMAIL_TEMPLATE = `
   <div style="font-family: Arial; padding: 16px;">
@@ -22,9 +21,6 @@ const EMAIL_TEMPLATE = `
 export function startWeeklyMailer() {
   console.log("⏳ Weekly mailer cronjob initialized...");
 
-  // ──────────────────────────────────────────
-  //  ⏰ CHẠY LÚC 19:00 THỨ 5 MỖI TUẦN
-  // ──────────────────────────────────────────
   cron.schedule(
     "0 19 * * 4",
     async () => {
@@ -45,7 +41,6 @@ export function startWeeklyMailer() {
 
         console.log(`📧 Sending emails to ${emails.length} users...`);
 
-        // Gửi từng email
         for (const email of emails) {
           await sendMail(email, EMAIL_SUBJECT, EMAIL_TEMPLATE);
         }
@@ -56,7 +51,7 @@ export function startWeeklyMailer() {
       }
     },
     {
-      timezone: "Asia/Ho_Chi_Minh", // Việt Nam
+      timezone: "Asia/Ho_Chi_Minh", 
     }
   );
 }

@@ -19,7 +19,7 @@ export const createVNPayUrl = (req, amount, bookingId) => {
   }
 
   const createDate = moment().format("YYYYMMDDHHmmss");
-  const orderInfo = `BOOKING#${bookingId}`; // ✅ format chuẩn để BE xử lý
+  const orderInfo = `BOOKING#${bookingId}`; 
   const orderType = "billpayment";
   const locale = "vn";
   const currCode = "VND";
@@ -40,18 +40,14 @@ export const createVNPayUrl = (req, amount, bookingId) => {
     vnp_CreateDate: createDate,
   };
 
-  // ✅ Sort params
   vnp_Params = sortObject(vnp_Params);
 
-  // ✅ Create hash
   const signData = querystring.stringify(vnp_Params, { encode: false });
   const hmac = crypto.createHmac("sha512", secretKey);
   const signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
 
-  // ✅ Append secure hash
   vnp_Params.vnp_SecureHash = signed;
 
-  // ✅ Build payment URL
   const paymentUrl = `${vnpUrl}?${querystring.stringify(vnp_Params, {
     encode: false,
   })}`;
@@ -59,7 +55,6 @@ export const createVNPayUrl = (req, amount, bookingId) => {
   return paymentUrl;
 };
 
-// ✅ Verify VNPay response
 export const verifyVNPayResponse = (vnp_Params) => {
   const secureHash = vnp_Params.vnp_SecureHash;
   if (!secureHash) return false;
@@ -79,7 +74,6 @@ export const verifyVNPayResponse = (vnp_Params) => {
   return secureHash === signed;
 };
 
-// ✅ Helper
 function sortObject(obj) {
   const sorted = {};
   Object.keys(obj)
