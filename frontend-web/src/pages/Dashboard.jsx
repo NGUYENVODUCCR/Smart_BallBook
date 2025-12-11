@@ -67,7 +67,7 @@ export default function Dashboard() {
       if (!token) throw new Error("No token");
 
       const res = await axios.get(
-        `http://localhost:5000/api/bookings/field/${field.id}`,
+        `https://smart-ballbook.onrender.com/api/bookings/field/${field.id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -160,7 +160,7 @@ export default function Dashboard() {
         status: "paid",
       };
 
-      await axios.post("http://localhost:5000/api/bookings", body, {
+      await axios.post("https://smart-ballbook.onrender.com/api/bookings", body, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
