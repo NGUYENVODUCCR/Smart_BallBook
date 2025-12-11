@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import FieldManager from "./FieldManager";
 import Dashboard from "./Dashboard";
-
 const API = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
 export default function AdminPanel() {
