@@ -2,8 +2,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
-import apiClient from "../../api/apiClient"; // file API gọi axios
-
+import apiClient from "../../api/apiClient"; 
 export default function Statistics() {
   const { token } = useContext(AuthContext);
   const [stats, setStats] = useState([]);
