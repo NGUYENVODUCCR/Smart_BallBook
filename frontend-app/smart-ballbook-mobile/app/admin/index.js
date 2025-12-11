@@ -41,7 +41,6 @@ export default function AdminHomeScreen() {
   );
 
   useEffect(() => {
-    // Logo nhún
     Animated.loop(
       Animated.sequence([
         Animated.timing(logoAnim, {
@@ -59,7 +58,6 @@ export default function AdminHomeScreen() {
       ])
     ).start();
 
-    // Cỏ chuyển động
     grassLayers.forEach((anim, i) => {
       const animateGrass = () => {
         Animated.sequence([
