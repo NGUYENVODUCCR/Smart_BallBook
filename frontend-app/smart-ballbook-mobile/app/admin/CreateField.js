@@ -35,7 +35,6 @@ export default function CreateField({ onCreated }) {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
 
-  // ✅ thêm trạng thái
   const [status, setStatus] = useState("trống");
 
   const [fields, setFields] = useState([]);
