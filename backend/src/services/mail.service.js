@@ -1,14 +1,13 @@
 import { transporter, mailOptions } from "../config/mailer.js";
 
-/**
- * Gửi email bằng SMTP (dùng cho quên mật khẩu, xác nhận đặt sân, v.v.)
- * @param {string} to - Email người nhận
- * @param {string} subject - Tiêu đề email
- * @param {string} html - Nội dung HTML của email
- */
+
 export const sendMail = async (to, subject, html) => {
   try {
-   
+    if (!to || typeof to !== "string" || to.trim() === "") {
+      console.warn("⚠️ Mail sending skipped: No recipients defined");
+      return null;
+    }
+
     const info = await transporter.sendMail(mailOptions(to, subject, html));
 
     console.log(`✅ Email sent successfully to ${to}`);
