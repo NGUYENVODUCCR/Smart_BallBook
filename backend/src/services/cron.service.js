@@ -1,63 +1,62 @@
 import cron from "node-cron";
-import { Op } from "sequelize";
-import Booking from "../models/booking.model.js";
 import User from "../models/user.model.js";
-import Field from "../models/field.model.js";
-import { sendMail } from "./mail.service.js";
+import { sendMail } from "../services/mail.service.js";
 
-export function startBookingCronJob() {
-  cron.schedule("*/1 * * * *", async () => {
-    try {
-      const now = new Date();
-      const dateStr = now.toISOString().split("T")[0];
-      const timeStr = now.toTimeString().slice(0, 5);
+// Nội dung email
+const EMAIL_SUBJECT = "⚽ Trải nghiệm thể thao tuyệt vời cùng chúng tôi!";
+const EMAIL_TEMPLATE = `
+  <div style="font-family: Arial; padding: 16px;">
+    <h2 style="color:#2e89ff;">⚽ Football Booking</h2>
+    <p>
+      Hãy tận hưởng mọi khoảnh khắc thể thao trữ tình, đầy cảm hứng cùng các sân bóng của chúng tôi.
+      <br/>Chúng tôi luôn sẵn sàng đồng hành cùng bạn trong từng trận đấu!
+    </p>
+    <p>🔥 Chúc bạn có một ngày thật năng lượng!</p>
+    <hr/>
+    <p style="font-size: 12px; color: gray;">
+      Đây là email tự động. Vui lòng không trả lời email này.
+    </p>
+  </div>
+`;
 
-      const expiredBookings = await Booking.findAll({
-        where: {
-          [Op.or]: [
-            { date: { [Op.lt]: dateStr } },
-            {
-              date: dateStr,
-              end_time: { [Op.lt]: timeStr },
-            },
-          ],
-          status: { [Op.notIn]: ["cancelled", "expired"] },
-        },
-        include: [
-          { model: User, as: "user" },
-          { model: Field, as: "field" },
-        ],
-      });
+export function startWeeklyMailer() {
+  console.log("⏳ Weekly mailer cronjob initialized...");
 
-      if (expiredBookings.length > 0) {
-        console.log(`⏰ Found ${expiredBookings.length} expired bookings`);
+  // ──────────────────────────────────────────
+  //  ⏰ CHẠY LÚC 19:00 THỨ 5 MỖI TUẦN
+  // ──────────────────────────────────────────
+  cron.schedule(
+    "0 19 * * 4",
+    async () => {
+      console.log("🚀 Cronjob: Sending weekly inspiration emails...");
 
-        for (const booking of expiredBookings) {
-          booking.status = "expired";
-          await booking.save();
+      try {
+        const users = await User.findAll({
+          where: { is_active: true },
+          attributes: ["email"],
+        });
 
-          if (booking.user?.email) {
-            const html = `
-              <h3>Xin chào ${booking.user.name || "người dùng"},</h3>
-              <p>Đặt sân của bạn tại <b>${booking.field.name}</b> vào ngày <b>${booking.date}</b> 
-              từ <b>${booking.start_time}</b> đến <b>${booking.end_time}</b> đã <b>hết hạn</b>.</p>
-              <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi ⚽</p>
-              <hr>
-              <p style="font-size:12px;color:gray;">Football Booking System</p>
-            `;
+        const emails = users.map((u) => u.email).filter(Boolean);
 
-            await sendMail({
-              to: booking.user.email,
-              subject: "⚽ Thông báo: Booking đã hết hạn",
-              html,
-            });
-
-            console.log(`📩 Mail sent to ${booking.user.email}`);
-          }
+        if (emails.length === 0) {
+          console.log("⚠️ No active user emails found.");
+          return;
         }
+
+        console.log(`📧 Sending emails to ${emails.length} users...`);
+
+        // Gửi từng email
+        for (const email of emails) {
+          await sendMail(email, EMAIL_SUBJECT, EMAIL_TEMPLATE);
+        }
+
+        console.log("🎉 Weekly inspiration emails sent successfully!");
+      } catch (err) {
+        console.error("❌ Error in weekly mailer cronjob:", err);
       }
-    } catch (error) {
-      console.error("❌ Cronjob error:", error);
+    },
+    {
+      timezone: "Asia/Ho_Chi_Minh", // Việt Nam
     }
-  });
+  );
 }
