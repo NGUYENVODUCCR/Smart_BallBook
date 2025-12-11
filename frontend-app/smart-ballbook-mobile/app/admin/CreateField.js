@@ -155,7 +155,6 @@ export default function CreateField({ onCreated }) {
       if (editField) {
         await updateField(editField.id, fieldData, token);
 
-        // ✅ update trạng thái riêng đúng với backend
         await updateFieldStatus(editField.id, status, token);
 
         setFields((prev) =>
