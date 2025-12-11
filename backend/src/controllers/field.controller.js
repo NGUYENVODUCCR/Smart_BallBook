@@ -4,7 +4,6 @@ import Booking from "../models/booking.model.js";
 import axios from "axios";
 import { Op } from "sequelize";
 
-// API AI NLP (render)
 const NLP_API = "https://aisearchbyvoice.onrender.com/nlp/clean";
 
 export async function searchFieldByAI(req, res) {
@@ -15,7 +14,6 @@ export async function searchFieldByAI(req, res) {
       return res.status(400).json({ msg: "Missing query text" });
     }
 
-    // 1. Gửi query sang AI NLP FastAPI
     const aiResponse = await axios.post(NLP_API, { text: query });
 
     const tokens = aiResponse.data.tokens;
@@ -24,12 +22,11 @@ export async function searchFieldByAI(req, res) {
       return res.json({ msg: "No keyword extracted", results: [] });
     }
 
-    // 2. Tạo điều kiện tìm kiếm (LIKE %token%)
     const conditions = tokens.map(token => ({
       [Op.or]: [
         { name: { [Op.like]: `%${token}%` } },
         { location: { [Op.like]: `%${token}%` } },
-        // giá tiền: nếu token là số thì so sánh gần đúng
+
         isNaN(token) ? {} : {
           price_per_hour: {
             [Op.between]: [
@@ -41,7 +38,6 @@ export async function searchFieldByAI(req, res) {
       ]
     }));
 
-    // 3. Gộp tất cả điều kiện bằng Op.and
     const results = await Field.findAll({
       where: {
         [Op.and]: conditions,
@@ -110,7 +106,6 @@ export async function createField(req, res) {
       return res.status(400).json({ msg: "Missing required fields" });
     }
 
-    // Mặc định trạng thái luôn là "trống"
     const field = await Field.create({
       name,
       location,
@@ -140,7 +135,6 @@ export async function updateField(req, res) {
     const field = await Field.findByPk(id);
     if (!field) return res.status(404).json({ msg: "Field not found" });
 
-    // Chỉ cho update các trường sau:
     const allowedFields = [
       "name",
       "location",
@@ -149,7 +143,6 @@ export async function updateField(req, res) {
       "description",
     ];
 
-    // Tạo object để update an toàn
     const updates = {};
     for (const key of allowedFields) {
       if (req.body[key] !== undefined) {
@@ -157,7 +150,6 @@ export async function updateField(req, res) {
       }
     }
 
-    // Tuyệt đối KHÔNG cho update status
     delete updates.status;
 
     await field.update(updates);
@@ -235,11 +227,9 @@ export async function resetFieldStatus(req, res) {
       return res.status(404).json({ msg: "Field not found" });
     }
 
-    // 1. RESET TRẠNG THÁI SÂN
     field.status = "trống";
     await field.save();
 
-    // 2. CHỈ UPDATE BOOKING, KHÔNG XÓA
     await Booking.update(
       { status: "cancelled" },
       { where: { field_id: id } }
