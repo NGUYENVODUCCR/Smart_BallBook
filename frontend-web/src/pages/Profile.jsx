@@ -46,7 +46,7 @@ export default function Profile() {
       const formData = new FormData();
       formData.append("avatar", file);
 
-      const res = await fetch("http://localhost:5000/api/auth/profile/avatar", {
+      const res = await fetch("https://smart-ballbook.onrender.com/api/auth/profile/avatar", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -81,7 +81,7 @@ export default function Profile() {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/auth/profile", {
+      const res = await fetch("https://smart-ballbook.onrender.com/api/auth/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

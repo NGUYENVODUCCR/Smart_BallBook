@@ -33,7 +33,7 @@ export default function Revenue() {
         url = `/api/revenue/year?year=${year}`;
       }
 
-      const res = await axios.get(`http://localhost:5000${url}`, {
+      const res = await axios.get(`https://smart-ballbook.onrender.com${url}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

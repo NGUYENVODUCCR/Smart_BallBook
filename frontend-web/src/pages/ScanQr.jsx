@@ -21,7 +21,7 @@ export default function ScanQr() {
           const bookingId = decodedText.replace("booking-checkin:", "");
 
           axios
-            .get(`http://localhost:5000/api/bookings/field/${bookingId}`, {
+            .get(`https://smart-ballbook.onrender.com/api/bookings/field/${bookingId}`, {
               headers: {
                 Authorization: "Bearer " + localStorage.getItem("token"),
               },

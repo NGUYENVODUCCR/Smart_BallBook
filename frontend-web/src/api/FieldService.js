@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const API = process.env.REACT_APP_API_URL || "https://smart-ballbook.onrender.com/api";
 
 export const getAllFields = async (token) => {
   const res = await axios.get(`${API}/fields`, {
