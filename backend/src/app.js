@@ -12,12 +12,16 @@ import reviewRoutes from "./routes/review.routes.js";
 import reportRoutes from "./routes/report.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 
+import { swaggerUi, swaggerSpec } from "./config/swagger.js";
+
 dotenv.config();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/fields", fieldRoutes);
@@ -35,7 +39,7 @@ app.get("/", (req, res) => {
 export const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log("✅ MySQL connected");
+    console.log(`✅ Connected to ${process.env.DB_DIALECT.toUpperCase()} database`);
 
     await sequelize.sync({ alter: true });
     console.log("✅ Models synced");
