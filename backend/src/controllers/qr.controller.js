@@ -2,43 +2,85 @@ import Booking from "../models/booking.model.js";
 import QRCheckin from "../models/qrcheckin.model.js";
 import { generateQRCode } from "../services/qr.service.js";
 
+/**
+ * Tạo QR code cho booking đã xác nhận
+ */
 export async function createQRForBooking(req, res) {
   try {
     const { bookingId } = req.params;
 
+    if (!bookingId) {
+      return res.status(400).json({ msg: "Missing bookingId" });
+    }
+
     const booking = await Booking.findByPk(bookingId);
-    if (!booking) return res.status(404).json({ msg: "Booking not found" });
+    if (!booking) {
+      return res.status(404).json({ msg: "Booking not found" });
+    }
 
-    if (booking.status !== "confirmed")
-      return res.status(400).json({ msg: "Booking must be confirmed first" });
+    // ✅ Chỉ tạo QR khi booking đã confirmed
+    if (booking.status !== "confirmed") {
+      return res.status(400).json({
+        msg: "Booking must be confirmed before creating QR",
+      });
+    }
 
-    let existing = await QRCheckin.findOne({ where: { booking_id: bookingId } });
-    if (existing) return res.json({ msg: "QR already exists", qr: existing });
+    // Nếu QR đã tồn tại
+    const existing = await QRCheckin.findOne({
+      where: { booking_id: bookingId },
+    });
+    if (existing) {
+      return res.json({ msg: "QR already exists", qr: existing });
+    }
 
-    const qrData = { bookingId: booking.id, userId: booking.user_id, fieldId: booking.field_id };
+    // Tạo QR
+    const qrData = {
+      bookingId: booking.id,
+      userId: booking.user_id,
+      fieldId: booking.field_id,
+    };
+
     const qrCode = await generateQRCode(qrData);
 
     const qr = await QRCheckin.create({
       booking_id: booking.id,
       qr_code: qrCode,
+      is_scanned: false,
     });
 
-    res.status(201).json({ msg: "QR created", qr });
+    res.status(201).json({ msg: "QR created successfully", qr });
   } catch (error) {
-    console.error(error);
+    console.error("createQRForBooking error:", error);
     res.status(500).json({ msg: "Server error" });
   }
 }
 
+/**
+ * Check-in bằng QR code
+ */
 export async function scanQR(req, res) {
   try {
     const { bookingId } = req.body;
 
-    const qr = await QRCheckin.findOne({ where: { booking_id: bookingId }, include: ["booking"] });
-    if (!qr) return res.status(404).json({ msg: "QR not found" });
+    if (!bookingId) {
+      return res.status(400).json({ msg: "Missing bookingId" });
+    }
 
-    if (qr.is_scanned)
-      return res.status(400).json({ msg: "Already checked in", scannedAt: qr.scanned_at });
+    const qr = await QRCheckin.findOne({
+      where: { booking_id: bookingId },
+      include: [{ model: Booking, as: "booking" }],
+    });
+
+    if (!qr) {
+      return res.status(404).json({ msg: "QR not found" });
+    }
+
+    if (qr.is_scanned) {
+      return res.status(400).json({
+        msg: "Already checked in",
+        scannedAt: qr.scanned_at,
+      });
+    }
 
     qr.is_scanned = true;
     qr.scanned_at = new Date();
@@ -46,19 +88,33 @@ export async function scanQR(req, res) {
 
     res.json({ msg: "Check-in successful", qr });
   } catch (error) {
-    console.error(error);
+    console.error("scanQR error:", error);
     res.status(500).json({ msg: "Server error" });
   }
 }
 
+/**
+ * Lấy QR code theo booking
+ */
 export async function getQRByBooking(req, res) {
   try {
     const { bookingId } = req.params;
-    const qr = await QRCheckin.findOne({ where: { booking_id: bookingId } });
-    if (!qr) return res.status(404).json({ msg: "QR not found" });
+
+    if (!bookingId) {
+      return res.status(400).json({ msg: "Missing bookingId" });
+    }
+
+    const qr = await QRCheckin.findOne({
+      where: { booking_id: bookingId },
+    });
+
+    if (!qr) {
+      return res.status(404).json({ msg: "QR not found" });
+    }
+
     res.json(qr);
   } catch (error) {
-    console.error(error);
+    console.error("getQRByBooking error:", error);
     res.status(500).json({ msg: "Server error" });
   }
 }
