@@ -1,4 +1,3 @@
-// api/qrApi.js
 import apiClient from "./apiClient";
 
 export const createQR = async (bookingId, token) => {
