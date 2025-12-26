@@ -61,6 +61,76 @@ router.get("/:id", verifyToken, permit("Admin"), getUserById);
 
 /**
  * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Tạo user mới (Admin)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - emailOrPhone
+ *               - password
+ *               - role
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Nguyễn Văn A
+ *               emailOrPhone:
+ *                 type: string
+ *                 description: Email hoặc số điện thoại (được lưu vào field email trong DB)
+ *                 example: example@gmail.com
+ *               password:
+ *                 type: string
+ *                 example: 123456
+ *               role:
+ *                 type: string
+ *                 enum: [User, Admin]
+ *                 example: User
+ *     responses:
+ *       201:
+ *         description: User được tạo thành công
+ *         content:
+ *           application/json:
+ *             example:
+ *               msg: User created
+ *               user:
+ *                 id: 1
+ *                 name: Nguyễn Văn A
+ *                 email: example@gmail.com
+ *                 role: User
+ *                 is_active: true
+ *                 is_verified: true
+ *       400:
+ *         description: Thiếu thông tin hoặc người dùng đã tồn tại
+ *         content:
+ *           application/json:
+ *             examples:
+ *               missingInfo:
+ *                 summary: Thiếu trường bắt buộc
+ *                 value:
+ *                   msg: Thiếu thông tin bắt buộc
+ *               exists:
+ *                 summary: Email đã tồn tại
+ *                 value:
+ *                   msg: Người dùng đã tồn tại
+ *       500:
+ *         description: Lỗi server
+ *         content:
+ *           application/json:
+ *             example:
+ *               msg: Server error
+ */
+router.post("/", verifyToken, permit("Admin"), createUser);
+
+/**
+ * @swagger
  * /api/users/{id}:
  *   put:
  *     summary: Cập nhật thông tin user (Admin)
