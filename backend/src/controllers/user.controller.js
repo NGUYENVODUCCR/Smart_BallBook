@@ -14,6 +14,36 @@ export async function getAllUsers(req, res) {
   }
 }
 
+export async function createUser(req, res) {
+  try {
+    const { name, emailOrPhone, password, role } = req.body;
+
+    if (!name || !emailOrPhone || !password || !role) {
+      return res.status(400).json({ msg: "Thiếu thông tin bắt buộc" });
+    }
+
+    const exists = await User.findOne({ where: { email: emailOrPhone } });
+    if (exists) return res.status(400).json({ msg: "Người dùng đã tồn tại" });
+
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    const newUser = await User.create({
+      name,
+      email: emailOrPhone,
+      password: hashedPassword,
+      role,
+      is_active: true,
+      is_verified: true,
+    });
+
+    res.status(201).json({ msg: "User created", user: newUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+}
+
 export async function getUserById(req, res) {
   try {
     const { id } = req.params;
